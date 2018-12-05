@@ -18,4 +18,23 @@ app.get('/', (req, res, next) => {
 
 app.use('/gbooks', gBookRoutes)
 
+//error handling
+
+app.use(notFound)
+app.use(errorHandler)
+
+function errorHandler(err, req, res, next) {
+    console.error('ERROR', err)
+    const stack = process.env.NODE_ENV !== 'production' ? err.stack : undefined
+    res.status(500).send({
+        error: err.message,
+        stack,
+        url: req.originalUrl
+    })
+}
+
+function notFound(req, res, next) {
+    res.status(404).send(err)
+}
+
 app.listen(port, () => console.log(`port ${port}`))
